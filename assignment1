@@ -1,0 +1,9 @@
+no_of_book1=int(input("Enter number of introduction to python programming books: "))
+no_of_book2-int(input("Enter number of python libraries cookbook books: "))
+no-of_book3=int(input("Enter number of Data science in python books: "))
+cost_of_books=float(no_of_book1*499.00+no_of_book2*855.00+no_of_book3*645.00)
+gst=0.12
+total=cost_of_books*gst
+delivery_charge=250.00
+total_cost=total+delivery_charge
+print(total_cost)
