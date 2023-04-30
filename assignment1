@@ -22,4 +22,12 @@ Output : uniqueLetters = i,n,d,a
 Input : string1 = "Dedication"
 Output : uniqueLetters = d,e,i,c,a,t,o,n
 
+word=input("string1: ")
+word.lower()
+new_list=[]
+for char in word:
+    if char not in new_list:
+        new_list.append(char)
+new_word=",".join(new_list)
+print("uniqueLetters = ",new_word)
 
