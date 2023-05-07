@@ -1,0 +1,149 @@
+Inventory Control Management
+
+Learning Objective - Understanding the problem statement and implementing the same using Python and SQL.
+
+Problem Statement - Inventory Control Management helps to identify which and how much stock to order at what time. It tracks inventory from purchase to the sale of goods. Create this project with the help of  the following specifications:
+
+1.Create a database called “Inventory_Management” with different tables like “manufacture”, “goods”, “purchase”, “sale” etc.
+
+2.Insert multiple entries to these different tables - “manufacture”, “goods”, “purchase” and “sale”.
+
+3.In the “manufacture” table, one should be able to see all the products that need to be manufactured, and defective items during the manufacture with different entries like manufacture id, number of items required, etc. 
+
+4.In the “goods” table, it should include different items that are manufactured by the company along with the goods id, manufactured date, etc.
+
+5.In the “purchase” table, it should include all the purchase details that are purchased in different online and offline stores, along with the purchase id, purchase amount, etc.
+
+6.In the “sale” table, it should include all the items got sold in different stores with the sale date, profit margin, etc
+
+7.Delete the defective item, e.g., the shirt which was accidentally purchased by the “ORay” store, manufactured on the date ‘01-04-23’.
+
+8.Update the manufacture details of all the red-colored toys which are purchased by the “MyKids” store.
+
+9.Display all the “wooden chair” items that were manufactured before the 1st May 2023. 
+
+10.Display the profit margin amount of the “wooden table” that was sold by the “MyCare” store, manufactured by the “SS Export” company.
+
+
+-- Connection Establishment
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18')
+print(mydb.connection_id)
+
+-- 1.Create a database called “Inventory_Management” with different tables like “manufacture”, “goods”, “purchase”, “sale” etc.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18')
+print(mydb.connection_id)
+cur=mydb.cursor()
+cur.execute('create database Inventory_management_db')
+
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+t='create table manufacture(manufacture_id integer PRIMARY KEY,item_name varchar(30) NOT NULL,item_color varchar(30) NOT NULL,num_of_items integer NOT NULL,no_of_defective integer NOT NULL,manufactured_by varchar(30) NOT NULL)'
+cur.execute(t)
+mydb.commit()
+
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+t='create table goods(goods_id integer PRIMARY KEY,manufactured_date date NOT NULL,manufacture_id integer NOT NULL,FOREIGN KEY(manufacture_id) REFERENCES manufacture(manufacture_id))
+cur.execute(t)
+mydb.commit()
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+t='create table purchase(purchase_id integer PRIMARY KEY,purchase_amount float NOT NULL,purchased_by varchar(30) NOT NULL,purchased_date date NOT NULL)'
+cur.execute(t)
+mydb.commit()
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+t='create table sale(sales_id integer PRIMARY KEY,profit_margin float NOT NULL,sold_date date NOT NULL,sold_by varchar(30) NOT NULL,goods_id integer NOT NULL,FOREIGN KEY(goods_id) REFERENCES goods(goods_id))'
+cur.execute(t)
+mydb.commit()
+
+
+-- 2.Insert multiple entries to these different tables - “manufacture”, “goods”, “purchase” and “sale”.
+
+--3.In the “manufacture” table, one should be able to see all the products that need to be manufactured, and defective items during the manufacture with different entries like manufacture id, number of items required, etc. 
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+i='insert into manufacture(manufacture_id,item_name,item_color,num_of_items,no_of_defective,manufactured_by)values(%s,%s,%s,%s,%s,%s)'
+values=(111,'wooden table','black',3,1,'XYZ wood works'),(222,'wooden chair','red',10,0,'ABC wood works'),(333,'wooden cot','brown',5,2,'KLM wood works')
+cur.executemany(i,values)
+mydb.commit()
+
+--4.In the “goods” table, it should include different items that are manufactured by the company along with the goods id, manufactured date, etc.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+i='insert into goods(goods_id,manufactured_date,manufacture_id)values(%s,%s,%s)'
+values=(11,'2023-09-01',111),(22,'2023-04-02',222),(33,'2023-03-03',333)
+cur=mydb.cursor()
+cur.executemany(i,values)
+mydb.commit()
+
+--5.In the “purchase” table, it should include all the purchase details that are purchased in different online and offline stores, along with the purchase id, purchase amount, etc.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+i='insert into purchase(purchase_id,purchase_amount,purchased_by,purchased_date)values(%s,%s,%s,%s)'
+values=(1234,1000,'ORay','2023-06-10'),(2345,2000,'MyKids','2023-05-10'),(3456,3000,'ABC','2023-07-21')
+cur=mydb.cursor()
+cur.executemany(i,values)
+mydb.commit()
+
+
+--6.In the “sale” table, it should include all the items got sold in different stores with the sale date, profit margin, etc
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+i='insert into sale(sales_id,profit_margin,sold_date,sold_by,goods_id)values(%s,%s,%s,%s,%s)'
+values=(1,150.5,'2023-04-02','ORay',22),(2,113.5,'2023-03-03','MyKids',33),(3,112.9,'2023-09-01','ABC',11)
+cur=mydb.cursor()
+cur.executemany(i,values)
+mydb.commit()
+
+
+--7.Delete the defective item, e.g., the shirt which was accidentally purchased by the “ORay” store, manufactured on the date ‘01-04-23’.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+s='DELETE FROM purchase p , manufacture m WHERE m.item_name="shirt"  AND  p.purchased_date="2023-04-01" AND p.purchased_by="ORay"'
+cur.execute(s)
+mydb.commit()
+
+--8.Update the manufacture details of all the red-colored toys which are purchased by the “MyKids” store.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+t='UPDATE manufacture m SET m.num_of_items=500 WHERE m.item_color="red" AND m.manufacture_id IN(SELECT m.manufacture_id FROM goods g WHERE g.goods_id IN(SELECT g.goods_id FROM sale s where s.sold_by="MyKids"))'
+cur.execute(t)
+mydb.commit()
+
+--9.Display all the “wooden chair” items that were manufactured before the 1st May 2023. 
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+x='select * from goods where goods_id=22 and manufactured_date<2023-05-01'
+cur.execute(x)
+mydb.commit()
+
+--10.Display the profit margin amount of the “wooden table” that was sold by the “MyCare” store, manufactured by the “SS Export” company.
+
+import mysql.connector
+mydb=mysql.connector.connect(host='localhost',user='root',password='Thrisha@18',database='Inventory_management_db')
+cur=mydb.cursor()
+z='select profit_margin from sale JOIN goods ON sale.goods_id=goods.goods_id JOIN manufacture ON goods.manufacture_id=manufacture.manufacture_id JOIN purchase ON goods.manufactured_date=purchase.purchased_date where item_name="wooden table" AND purchased_by="MyCare" AND manufactured_by="SS Export"'
+cur.execute(x)
+mydb.commit()
