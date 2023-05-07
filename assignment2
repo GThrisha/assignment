@@ -1,0 +1,88 @@
+Exercise 1 (5 marks):
+
+Create a database schema for the online consultation and therapy website. The database should contain the following tables:-
+
+Doctor table:- The table should contain the attributes such as id, name, specialization, etc.
+Appointments table:- The table should contain information related to appointments set up by doctors and patients.
+Patient table:- The table should contain information on patients.
+Reviews table:- This table should contain reviews posted by patients.
+
+Query:
+
+CREATE DATABASE Hospital;
+
+CREATE TABLE doctor(id int PRIMARY KEY NOT NULL,
+name varchar(30) NOT NULL,
+specialization varchar(30) NOT NULL,
+age int NOT NULL);
+
+CREATE TABLE appointments(doctor_id int PRIMARY KEY NOT NULL,
+doctor_name varchar(30) NOT NULL,
+appointment_date date NOT NULL,
+patient_id int NOT NULL,
+patient_name varchar(30) NOT NULL);
+
+CREATE TABLE patient(patient_id int PRIMARY KEY NOT NULL,
+patient_name varchar(30) NOT NULL,
+patient_age int NOT NULL,
+patient_disease varchar(30) NOT NULL,
+patient_address varchar(30) NOT NULL, 
+phone_num int NOT NULL);
+
+CREATE TABLE reviews(doctor_id int PRIMARY KEY NOT NULL,
+doctor_name varchar(30) NOT NULL,
+patient_id int NOT NULL,
+patient_name varchar(30),
+rating int NOT NULL,
+comments varchar(30));
+
+
+Exercise 2 (5 marks):
+
+QUESTIONS:
+
+1.Select all columns from the contact table where the active flag is 1
+2.Deactivate contacts who are opted out 
+3.Delete all the contacts who have the company name as ‘ABC’
+4.Insert a new row with id as 658, name as ‘mili’, email as ‘mili@gmail.com’, the company as ‘DGH’, active flag as 1, opt-out flag as 1
+5.Pull out the unique values of the company column 
+6.Update name “mili” to “niti”.
+
+CREATE TABLE contact1(id int PRIMARY KEY NOT NULL,
+email varchar(30) NOT NULL,
+fname varchar(30) NOT NULL,
+lname varchar(30) ,
+company varchar(30) NOT NULL,
+active_flag int NOT NULL,
+opt_out int NOT NULL);
+
+INSERT INTO contact1 VALUES(123,'a@a.com','Kian','Seth','ABC',1,1),
+(133,'b@a.com','Neha','Seth','ABC',1,0),
+(234,'c@c.com','Puru','Malik','CDF',0,0),
+(342,'d@d.com','Sid','Maan','TEG',1,0);
+
+-- 1.
+select * from contact where active_flag=1;
+
+-- 2.
+DELETE FROM contact where opt_out=1;
+
+select * from contact1;
+
+-- 3.
+DELETE FROM contact where company='ABC';
+
+-- 4.
+INSERT INTO contact1(id,email,fname,lname,company,active_flag,opt_out)VALUES(658,'mili@gmail.com','mili',null,'DGH',1,1);
+
+-- 5.
+SELECT DISTINCT(company) from contact;
+
+-- 6.
+UPDATE contact set fname='niti' where fname='mili';
+
+
+Exercise 3 (10 marks):
+Write a SQL query to find those customers with a grade less than 100. It should return cust_name, customer city, grade, salesman, and salesman city. The result should be ordered by ascending customer_id.
+
+select c.cust_name,c.city,c.grade,s.salesman_id,s.city from customer c,salesman s where c.grade<100 order by c.customer_id asc;
